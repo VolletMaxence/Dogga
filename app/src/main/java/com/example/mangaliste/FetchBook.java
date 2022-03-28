@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 public class FetchBook extends AsyncTask<String, Void, String> {
     private TextView mCodeData;
+    private int OneShot;
 
     public FetchBook(TextView CodeData) {
         this.mCodeData = CodeData;
@@ -66,14 +67,31 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                     {
                         Pattern pattern2 = Pattern.compile("^([^\t]+) Tome ([^\t])");
                         Matcher matcher2 = pattern.matcher(title);
-                        Titre = matcher2.group(1);
+
+                        if (matcher2.find())
+                        {
+                            Titre = matcher2.group(1);
+                        } else
+                        {
+                            Titre = title;
+                            OneShot = 1;
+                        }
+
                     }
 
-                    //Cut le nom Entier pour recuperer le numero du tome
-                    Pattern pattern3 = Pattern.compile("\\d+$");
-                    Matcher matcher3 = pattern3.matcher(title);
-                    matcher3.find();
-                    String NumeroTome = matcher3.group();
+                    String NumeroTome;
+
+                    if (OneShot == 1)
+                    {
+                        NumeroTome = "1";
+                    } else
+                    {
+                        //Cut le nom Entier pour recuperer le numero du tome
+                        Pattern pattern3 = Pattern.compile("\\d+$");
+                        Matcher matcher3 = pattern3.matcher(title);
+                        matcher3.find();
+                        NumeroTome = matcher3.group();
+                    }
 
                     System.out.println("XYZ : "+ NumeroTome);
                     //System.out.println("XYZ : "+ );
