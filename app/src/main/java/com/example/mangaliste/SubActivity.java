@@ -40,7 +40,7 @@ public class SubActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_connection);
+        setContentView(R.layout.activity_sub);
 
         pseudo = (EditText) findViewById(R.id.pseudo);
         mdp = (EditText) findViewById(R.id.mdp);
@@ -79,7 +79,7 @@ public class SubActivity extends AppCompatActivity {
         SessionManagement sessionManagement = new SessionManagement(SubActivity.this);
         int UserId = sessionManagement.getSession();
 
-        System.out.println("User ID : "+UserId);
+        System.out.println("User ID Sub : "+UserId);
         if (UserId != -1)
         {
             System.out.println("User connecté");
@@ -113,16 +113,16 @@ public class SubActivity extends AppCompatActivity {
             //Statement st = connectionSQL_BDD();
 
 
-            String SQLuser = "SELECT mdp FROM utilisateur WHERE username = '"+pseudo.getText().toString()+"' && username = '"+pseudo.getText().toString()+"'";
+            String SQLuser = "SELECT username FROM utilisateur WHERE username = '"+pseudo.getText().toString()+"'";
 
             java.sql.Connection connuser = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
             Statement st = connuser.createStatement();
             ResultSet rsuser = st.executeQuery(SQLuser);
             System.out.println(SQLuser);
-            rsuser.next();
+
 
             //Si l'utilisateur existe déjà en base :
-            if (rsuser.getString(1).equals(pseudo.getText().toString())) {
+            if (rsuser.next() != false) {
                 //Erreur
                 ((TextView) findViewById(R.id.error)).setText("Le compte exise déjà.");
             } else {

@@ -24,6 +24,7 @@ import java.sql.Statement;
 public class Connection extends AppCompatActivity {
 
     private Button connect;
+    private Button mSubButton;
     private EditText mdp;
     private EditText pseudo;
     private TextView error;
@@ -46,6 +47,7 @@ public class Connection extends AppCompatActivity {
         mdp = (EditText) findViewById(R.id.mdp);
 
         connect = (Button) findViewById(R.id.connect);
+        mSubButton = (Button) findViewById(R.id.Sub);
 
         error = (TextView) findViewById(R.id.error);
 
@@ -59,12 +61,26 @@ public class Connection extends AppCompatActivity {
             }
         });
 
+        mSubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSubPage();
+            }
+        });
+
         if (Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
 
+    }
+
+    private void openSubPage() {
+        Intent intent = new Intent(Connection.this, SubActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     @Override

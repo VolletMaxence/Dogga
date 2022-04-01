@@ -43,4 +43,12 @@
         android:hint="Se Connecter"
         />
 
+    <Button
+        android:id="@+id/Sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/connect"
+        android:hint="S'inscrir" />
+
 </RelativeLayout>
