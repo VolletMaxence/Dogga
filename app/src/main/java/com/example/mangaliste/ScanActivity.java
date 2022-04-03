@@ -79,9 +79,14 @@ public class ScanActivity extends AppCompatActivity {
                         if (charTroisPremierCharactere.equals("168"))
                         {
                             //Obtenir les infos du manga Scanner
+                            codeData.setText("Scan en cour.");
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             RechercheLivre(data);
-
-                            codeData.setText(data);
+                            codeData.setText("Votre livre : ");
                         } else
                         {
                             codeData.setText("Le code barre scanner n'est pas un code barre de livre.");
@@ -108,7 +113,7 @@ public class ScanActivity extends AppCompatActivity {
     {
         new FetchBook(infoLivre).execute(data);
         try {
-            Thread.sleep(2999);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

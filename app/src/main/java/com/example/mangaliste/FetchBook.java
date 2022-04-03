@@ -52,6 +52,8 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
 
+                System.out.println("title : "+title);
+
                 //Si on trouve en Titre et un auteur, on fait quelque chose
                 if (title != null) {
                     //mCodeData.setText("Titre : "+ title + ", Auteur : "+ auteur);
@@ -108,9 +110,25 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                         NumeroTome = NumeroTomeString;
                     }
 
-                    System.out.println("XYZ : "+ NumeroTome);
+                    //Vérifier si le titre du livre possède un "'" ou non, pour que requete SQL fonctionne
+                    if(Titre.contains("'"))
+                    {
+                        String[] split = Titre.split("'");
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < split.length; i++) {
+                            sb.append(split[i]);
+                            if (i != split.length - 1) {
+                                sb.append(" ");
+                            }
+                        }
+                        Titre = sb.toString();
+                    }
+                    System.out.println("XYZ Titre : "+ Titre);
+                    System.out.println("XYZ NumTome : "+ NumeroTome);
                     //System.out.println("XYZ : "+ );
                     mCodeData.setText("Titre : "+ Titre + ", Tome numéro "+ NumeroTome);
+
+
 
                     //Ajoute du livre dans la base de donnée
                     //Verifier si il n'y est pas deja :
