@@ -66,15 +66,33 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                     } else
                     {
                         Pattern pattern2 = Pattern.compile("^([^\t]+) Tome ([^\t])");
-                        Matcher matcher2 = pattern.matcher(title);
+                        Matcher matcher2 = pattern2.matcher(title);
 
                         if (matcher2.find())
                         {
                             Titre = matcher2.group(1);
                         } else
                         {
-                            Titre = title;
-                            OneShot = 1;
+                            Pattern pattern3 = Pattern.compile("^([^\t]+) Tome numéro ([^\t])");
+                            Matcher matcher3 = pattern3.matcher(title);
+
+                            if (matcher3.find())
+                            {
+                                Titre = matcher3.group(1);
+                            } else
+                            {
+                                Pattern pattern4 = Pattern.compile("^([^\t]+) Tome numero ([^\t])");
+                                Matcher matcher4 = pattern4.matcher(title);
+
+                                if (matcher4.find())
+                                {
+                                    Titre = matcher4.group(1);
+                                } else
+                                {
+                                    Titre = title;
+                                    OneShot = 1;
+                                }
+                            }
                         }
 
                     }
@@ -103,7 +121,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                     String SQLVerif = "SELECT Nom FROM manga WHERE Nom = '"+ Titre +"'";
                     String SQLNum = "SELECT nbrTome FROM manga WHERE Nom = '"+ Titre +"'";
                     String SQLUpdateTome = "UPDATE manga SET `nbrTome`='"+ NumeroTome +"' WHERE `Nom`='" + Titre + "'";
-                    String SQLAjout = "INSERT INTO manga (`Nom`, `nbrTome`) VALUES (`"+ Titre +"`,`"+ NumeroTome +"`)";
+                    String SQLAjout = "INSERT INTO manga (`Nom`, `nbrTome`) VALUES ('"+ Titre +"','"+ NumeroTome +"')";
                     String SQLID = "SELECT ID FROM manga WHERE Nom = '"+ Titre +"'";
 
                     java.sql.Connection conn = null;
@@ -113,9 +131,8 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                         ResultSet rs = st.executeQuery(SQLVerif);
                         System.out.println(SQLVerif);
 
-                        rs.next();
-
-                        if (rs.getString(1).equals(Titre)) {
+                        if (rs.next() != false) {
+                            System.out.println("Manga Trouvé :");
                             //Verifier numéro tome
                             conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
                             Statement stNum = conn.createStatement();
@@ -147,6 +164,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                             }
 
                         } else {
+                            System.out.println("Manga pas en base");
                             //Le livre n'est pas en base : ajout
                             conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
                             Statement stAjout = conn.createStatement();
@@ -173,31 +191,24 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
                         //Mettre la liaison dans la BDD si elle n'existe pas
                         //Verif
-                        String SQLVerifID = "SELECT ID_Manga FROM mangaUtilisateur WHERE ID_Manga = '"+ IDManga +" AND ID_Utilisateur = '"+ UserId +"'";
+                        String SQLVerifID = "SELECT ID_Manga, nbrTomePosseder FROM mangaUtilisateur WHERE ID_Manga = '"+ IDManga +"' AND ID_Utilisateur = '"+ UserId +"'";
                         conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
                         Statement stVerif = conn.createStatement();
                         ResultSet rsVerif = stVerif.executeQuery(SQLVerifID);
-                        System.out.println(SQLVerif);
-                        rsVerif.next();
+                        System.out.println("SQLVerif : "+SQLVerif);
 
                         //Si la liaison exist
-                        if(rsVerif.getString(1).equals(rsID.getString(1)))
+                        if(rsVerif.next() != false)
                         {
-                            //Verifier le nbr de tome :
-                            String SQLVerifNbrTome = "SELECT nbrTomePosseder FROM mangaUtilisateur WHERE ID_Utilisateur = '"+ UserId +" AND ID_Manga = '"+ IDManga +"'";
-                            conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
-                            Statement stVerifNbrTome = conn.createStatement();
-                            ResultSet rsVerifNbrTome = stVerifNbrTome.executeQuery(SQLVerifNbrTome);
-                            System.out.println(SQLVerifNbrTome);
-                            rsVerifNbrTome.next();
-
-                            int ResultRequete = Integer.parseInt(rsVerifNbrTome.getString(1));
+                            System.out.println("Liaison en base");
+                            //Si problème, changement effectué ici :
                             int NumeroTomeInt = Integer.parseInt(NumeroTome);
-                            System.out.println(ResultRequete);
+                            System.out.println(rsVerif.getString(2));
                             System.out.println(NumeroTomeInt);
 
+                            int ResultSQL = Integer.parseInt(rsVerif.getString(2));
                             //Si le nbrTome en base est inferieur au nbrTome scanner :
-                            if (ResultRequete < NumeroTomeInt) {
+                            if (ResultSQL < NumeroTomeInt) {
                                 //Update
                                 String SQLUpdateNbrMangaLiaison = "UPDATE mangaUtilisateur SET `nbrTomePosseder`='"+ NumeroTome  +"' WHERE ID_Utilisateur = '"+ UserId +" AND ID_Manga = '"+ IDManga +"'";
                                 conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
@@ -206,14 +217,16 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                                 System.out.println(rsUpdateNbrMangaLiaison);
                             }
                         } else {
-                            String SQLAjoutLiaison = "INSERT INTO mangaUtilisateur (`ID_Utilisateur`, `ID_Manga`, `nbrTomePosseder`) VALUES (`"+ Titre +"`,`"+ IDManga +"`,`"+ NumeroTome +"`)";
+                            System.out.println("Pas de liaison en base");
+                            //Ajouter la liaison :
+                            String SQLAjoutLiaison = "INSERT INTO mangaUtilisateur (`ID_Utilisateur`, `ID_Manga`, `nbrTomePosseder`, `nomManga`) VALUES ('"+ UserId +"','"+ IDManga +"','"+ NumeroTome +"','"+ Titre +"')";
                             conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
                             Statement stAjoutLiaison = conn.createStatement();
                             int rsAddLiaison = stAjoutLiaison.executeUpdate(SQLAjoutLiaison);
                             System.out.println(rsAddLiaison);
                         }
-
-                        } catch (SQLException throwables) {
+                    } catch (SQLException throwables)
+                    {
                         throwables.printStackTrace();
                     }
 

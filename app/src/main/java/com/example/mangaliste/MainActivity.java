@@ -45,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 openScannerPage();
             }
         });
+        mListeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openListePage();
+            }
+        });
     }
 
     public void openDeconnectionPage() {
@@ -63,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void openScannerPage() {
         Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    private void openListePage() {
+        Intent intent = new Intent(MainActivity.this, ListeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
