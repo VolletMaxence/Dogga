@@ -108,7 +108,7 @@ public class ScanActivity extends AppCompatActivity {
     {
         new FetchBook(infoLivre).execute(data);
         try {
-            Thread.sleep(5001);
+            Thread.sleep(2999);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
