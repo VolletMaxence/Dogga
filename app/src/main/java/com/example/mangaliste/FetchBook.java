@@ -16,6 +16,9 @@ import java.util.regex.Pattern;
 public class FetchBook extends AsyncTask<String, Void, String> {
     private TextView mCodeData;
     private int OneShot;
+    String Titre = null;
+    String title = null;
+    String NumeroTomeString;
 
     public FetchBook(TextView CodeData) {
         this.mCodeData = CodeData;
@@ -38,7 +41,6 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
             for (int i = 0; i < itemsArray.length(); i++) {
                 JSONObject book = itemsArray.getJSONObject(i);
-                String title = null;
                 String TitrePourNumTome = null;
                 //JSONObject volumeInfo = book.getJSONObject("offers");
 
@@ -52,51 +54,50 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
                 //Si on trouve en Titre et un auteur, on fait quelque chose
                 if (title != null) {
-                    String Titre = null;
                     //mCodeData.setText("Titre : "+ title + ", Auteur : "+ auteur);
-                    System.out.println("XYZA : "+ title);
+                    System.out.println("XYZA : " + title);
 
                     //Cut le nom Entier pour récupérer uniquement le nom du manga
-                    Pattern pattern = Pattern.compile("^([^\t]+) T([^\t])");
-                    Matcher matcher = pattern.matcher(title);
+                    Pattern pattern01 = Pattern.compile("^([^\t]+) T (\\d+)");
+                    Matcher matcher01 = pattern01.matcher(title);
 
-                    if (matcher.find())
-                    {
-                        Titre = matcher.group(1);
-                    } else
-                    {
-                        Pattern pattern2 = Pattern.compile("^([^\t]+) Tome ([^\t])");
-                        Matcher matcher2 = pattern2.matcher(title);
+                    if (matcher01.find()) {
+                        System.out.println("Option 01");
+                        Titre = matcher01.group(1);
+                        NumeroTomeString = matcher01.group(2);
+                    } else {
+                        Pattern pattern02 = Pattern.compile("^([^\t]+) Tome (\\d+)");
+                        Matcher matcher02 = pattern02.matcher(title);
 
-                        if (matcher2.find())
-                        {
-                            Titre = matcher2.group(1);
-                        } else
-                        {
-                            Pattern pattern3 = Pattern.compile("^([^\t]+) Tome numéro ([^\t])");
-                            Matcher matcher3 = pattern3.matcher(title);
+                        if (matcher02.find()) {
+                            System.out.println("Option 02");
+                            Titre = matcher02.group(1);
+                            NumeroTomeString = matcher02.group(2);
+                        } else {
+                            Pattern pattern03 = Pattern.compile("^([^\t]+) Tome numéro (\\d+)");
+                            Matcher matcher03 = pattern03.matcher(title);
 
-                            if (matcher3.find())
-                            {
-                                Titre = matcher3.group(1);
-                            } else
-                            {
-                                Pattern pattern4 = Pattern.compile("^([^\t]+) Tome numero ([^\t])");
-                                Matcher matcher4 = pattern4.matcher(title);
-
-                                if (matcher4.find())
-                                {
-                                    Titre = matcher4.group(1);
-                                } else
-                                {
-                                    Titre = title;
-                                    OneShot = 1;
+                            if (matcher03.find()) {
+                                System.out.println("Option 03");
+                                Titre = matcher03.group(1);
+                                NumeroTomeString = matcher03.group(2);
+                            } else {
+                                Pattern pattern04 = Pattern.compile("^([^\t]+) Tome numero (\\d+)");
+                                Matcher matcher04 = pattern04.matcher(title);
+                                if (matcher04.find()) {
+                                    System.out.println("Option 04");
+                                    Titre = matcher04.group(1);
+                                    NumeroTomeString = matcher04.group(2);
                                 }
                             }
                         }
-
                     }
-
+                } else
+                {
+                    Titre = title;
+                    OneShot = 1;
+                }
+            }
                     String NumeroTome;
 
                     if (OneShot == 1)
@@ -104,11 +105,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                         NumeroTome = "1";
                     } else
                     {
-                        //Cut le nom Entier pour recuperer le numero du tome
-                        Pattern pattern3 = Pattern.compile("\\d+$");
-                        Matcher matcher3 = pattern3.matcher(title);
-                        matcher3.find();
-                        NumeroTome = matcher3.group();
+                        NumeroTome = NumeroTomeString;
                     }
 
                     System.out.println("XYZ : "+ NumeroTome);
@@ -230,11 +227,11 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                         throwables.printStackTrace();
                     }
 
-                } else
+                /* else
                 {
                     mCodeData.setText("Erreur dans la requete API.");
-                }
-            }
+                } */
+
         } catch (Exception e)
         {
             e.printStackTrace();
