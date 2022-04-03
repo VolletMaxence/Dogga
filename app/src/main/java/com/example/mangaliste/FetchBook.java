@@ -58,7 +58,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                     System.out.println("XYZA : " + title);
 
                     //Cut le nom Entier pour récupérer uniquement le nom du manga
-                    Pattern pattern01 = Pattern.compile("^([^\t]+) T (\\d+)");
+                    Pattern pattern01 = Pattern.compile("^([^\t]+) T(\\d+)");
                     Matcher matcher01 = pattern01.matcher(title);
 
                     if (matcher01.find()) {
@@ -207,7 +207,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                             //Si le nbrTome en base est inferieur au nbrTome scanner :
                             if (ResultSQL < NumeroTomeInt) {
                                 //Update
-                                String SQLUpdateNbrMangaLiaison = "UPDATE mangaUtilisateur SET `nbrTomePosseder`='"+ NumeroTome  +"' WHERE ID_Utilisateur = '"+ UserId +" AND ID_Manga = '"+ IDManga +"'";
+                                String SQLUpdateNbrMangaLiaison = "UPDATE mangaUtilisateur SET `nbrTomePosseder`='"+ NumeroTome  +"' WHERE ID_Utilisateur = '"+ UserId +"' AND ID_Manga = '"+ IDManga +"'";
                                 conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
                                 Statement stUpdateNbrMangaLiaison = conn.createStatement();
                                 int rsUpdateNbrMangaLiaison = stUpdateNbrMangaLiaison.executeUpdate(SQLUpdateNbrMangaLiaison);
