@@ -70,7 +70,7 @@ public class ListeActivity extends AppCompatActivity {
 
                 //Délimitation entre 2 Manga
                 TextView Delimitation = new TextView(this);
-                Delimitation.setText("-------------------------------------------------");
+                Delimitation.setText("—————————————————————————————————————————————————");
                 Delimitation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 Delimitation.setGravity(Gravity.CENTER_HORIZONTAL);
                 linearLayout.addView(Delimitation);
