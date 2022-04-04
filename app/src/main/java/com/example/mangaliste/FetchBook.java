@@ -133,8 +133,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                     //Ajoute du livre dans la base de donnée
                     //Verifier si il n'y est pas deja :
 
-                    String SQLVerif = "SELECT Nom FROM manga WHERE Nom = '"+ Titre +"'";
-                    String SQLNum = "SELECT nbrTome FROM manga WHERE Nom = '"+ Titre +"'";
+                    String SQLVerif = "SELECT Nom, nbrTome FROM manga WHERE Nom = '"+ Titre +"'";
                     String SQLUpdateTome = "UPDATE manga SET `nbrTome`='"+ NumeroTome +"' WHERE `Nom`='" + Titre + "'";
                     String SQLAjout = "INSERT INTO manga (`Nom`, `nbrTome`) VALUES ('"+ Titre +"','"+ NumeroTome +"')";
                     String SQLID = "SELECT ID FROM manga WHERE Nom = '"+ Titre +"'";
@@ -148,15 +147,9 @@ public class FetchBook extends AsyncTask<String, Void, String> {
 
                         if (rs.next() != false) {
                             System.out.println("Manga Trouvé :");
-                            //Verifier numéro tome
-                            conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
-                            Statement stNum = conn.createStatement();
-                            ResultSet rsNum = stNum.executeQuery(SQLNum);
-                            System.out.println(SQLNum);
-                            rsNum.next();
 
                             //String to int
-                            int ResultRequete = Integer.parseInt(rsNum.getString(1));
+                            int ResultRequete = Integer.parseInt(rs.getString(2));
                             int NumeroTomeInt = Integer.parseInt(NumeroTome);
                             System.out.println(ResultRequete);
                             System.out.println(NumeroTomeInt);
