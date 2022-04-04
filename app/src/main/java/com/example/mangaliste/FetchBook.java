@@ -178,7 +178,6 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                             Statement stAjout = conn.createStatement();
                             int rsAdd = stAjout.executeUpdate(SQLAjout);
                             System.out.println(SQLAjout);
-                            //rsAdd.next();
                             System.out.println("XYZ : Ajout du livre en base");
                         }
 
