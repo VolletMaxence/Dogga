@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class FetchBook extends AsyncTask<String, Void, String> {
     private TextView mCodeData;
-    private int OneShot;
+    int OneShot = 0;
     String Titre = null;
     String title = null;
     String NumeroTomeString;
@@ -68,6 +68,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                         Titre = matcher01.group(1);
                         NumeroTomeString = matcher01.group(2);
                     } else {
+                        System.out.println("else 1");
                         Pattern pattern02 = Pattern.compile("^([^\t]+) Tome (\\d+)");
                         Matcher matcher02 = pattern02.matcher(title);
 
@@ -76,6 +77,7 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                             Titre = matcher02.group(1);
                             NumeroTomeString = matcher02.group(2);
                         } else {
+                            System.out.println("else 2");
                             Pattern pattern03 = Pattern.compile("^([^\t]+) Tome numéro (\\d+)");
                             Matcher matcher03 = pattern03.matcher(title);
 
@@ -84,29 +86,42 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                                 Titre = matcher03.group(1);
                                 NumeroTomeString = matcher03.group(2);
                             } else {
+                                System.out.println("else 3");
                                 Pattern pattern04 = Pattern.compile("^([^\t]+) Tome numero (\\d+)");
                                 Matcher matcher04 = pattern04.matcher(title);
                                 if (matcher04.find()) {
                                     System.out.println("Option 04");
                                     Titre = matcher04.group(1);
                                     NumeroTomeString = matcher04.group(2);
+                                }else{
+                                    System.out.println("else 4");
+                                    Pattern pattern05 = Pattern.compile("^([^\t]+) 0(\\d+)");
+                                    Matcher matcher05 = pattern05.matcher(title);
+                                    if (matcher05.find()) {
+                                        System.out.println("Option 05");
+                                        Titre = matcher05.group(1);
+                                        NumeroTomeString = matcher05.group(2);
+                                    }else
+                                    {
+                                        System.out.println("Option else");
+                                        Titre = title;
+                                        OneShot = 2;
+                                    }
                                 }
                             }
                         }
                     }
-                } else
-                {
-                    Titre = title;
-                    OneShot = 1;
                 }
             }
                     String NumeroTome;
 
-                    if (OneShot == 1)
+                    if (OneShot == 2)
                     {
+                        System.out.println("OneShot");
                         NumeroTome = "1";
                     } else
                     {
+                        System.out.println("Plusieur Tome");
                         NumeroTome = NumeroTomeString;
                     }
 
