@@ -19,6 +19,9 @@
         android:theme="@style/Theme.MangaListe"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ListeAutreActivity"
+            android:exported="false" />
+        <activity
             android:name=".SubActivity"
             android:exported="false" />
 
