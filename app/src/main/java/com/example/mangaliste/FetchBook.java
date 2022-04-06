@@ -103,9 +103,18 @@ public class FetchBook extends AsyncTask<String, Void, String> {
                                         NumeroTomeString = matcher05.group(2);
                                     }else
                                     {
-                                        System.out.println("Option else");
-                                        Titre = title;
-                                        OneShot = 2;
+                                        System.out.println("else 5");
+                                        Pattern pattern06 = Pattern.compile("^([^\t]+) (\\d+)$");
+                                        Matcher matcher06 = pattern06.matcher(title);
+                                        if(matcher06.find()) {
+                                            System.out.println("option 06");
+                                            Titre = matcher06.group(1);
+                                            NumeroTomeString = matcher06.group(2);
+                                        } else {
+                                            System.out.println("Option else");
+                                            Titre = title;
+                                            OneShot = 2;
+                                        }
                                     }
                                 }
                             }
