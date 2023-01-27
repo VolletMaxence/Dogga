@@ -1,4 +1,4 @@
-package com.example.mangaliste;
+package com.example.dogga;
 
 import org.junit.Test;
 

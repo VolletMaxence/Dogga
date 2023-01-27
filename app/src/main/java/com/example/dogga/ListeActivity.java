@@ -1,11 +1,11 @@
-package com.example.mangaliste;
+package com.example.dogga;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,9 +17,9 @@ import java.sql.Statement;
 
 public class ListeActivity extends AppCompatActivity {
 
-    private static int UserId;
     LinearLayout linearLayout;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +28,9 @@ public class ListeActivity extends AppCompatActivity {
         linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
 
         SessionManagement sessionManagement = new SessionManagement(ListeActivity.this);
-        UserId = sessionManagement.getSession();
+        int userId = sessionManagement.getSession();
 
-        String SQLListe = "SELECT `nomManga`,`nbrTomePosseder` FROM `mangaUtilisateur` WHERE `ID_Utilisateur` = "+ UserId +" ORDER BY `nomManga` ASC";
+        String SQLListe = "SELECT `nomManga`,`nbrTomePosseder` FROM `mangaUtilisateur` WHERE `ID_Utilisateur` = "+ userId +" ORDER BY `nomManga` ASC";
 
         java.sql.Connection connliste = null;
         try {

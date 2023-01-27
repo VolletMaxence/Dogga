@@ -1,14 +1,10 @@
-package com.example.mangaliste;
+package com.example.dogga;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -22,13 +18,12 @@ public class ListeAutreActivity extends AppCompatActivity {
 
     private static int UserId;
     LinearLayout linearLayout;
-    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liste_autre);
-        this.spinner = (Spinner) findViewById(R.id.spinner_utilisateur);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_utilisateur);
 
         //User[] employees = UserData.getData();
 
@@ -38,9 +33,9 @@ public class ListeAutreActivity extends AppCompatActivity {
         //Récupérer les Utilisateur
         String SQLListe = "SELECT `ID`,`username` FROM `utilisateur` ORDER BY `username` ASC";
 
-        java.sql.Connection connliste = null;
+        java.sql.Connection connliste;
         try {
-            connliste = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
+            connliste = DriverManager.getConnection(ReadConfig.url_bdd, ReadConfig.username_bdd, ReadConfig.mdp_bdd);
             Statement stliste = connliste.createStatement();
             ResultSet rsliste = stliste.executeQuery(SQLListe);
             ResultSetMetaData rsmetadataliste = rsliste.getMetaData();

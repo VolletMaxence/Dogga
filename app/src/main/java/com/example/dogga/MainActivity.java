@@ -1,21 +1,13 @@
-package com.example.mangaliste;
+package com.example.dogga;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Button mConnectionButton;
-    private Button mScanButton;
-    private Button mListeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,33 +16,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Instancie les variable de l'objet
-        mConnectionButton = findViewById(R.id.main_button_connection);
-        mScanButton = findViewById(R.id.main_button_scan);
-        mListeButton = findViewById(R.id.main_button_saliste);
+        Button mConnectionButton = findViewById(R.id.main_button_connection);
+        Button mScanButton = findViewById(R.id.main_button_scan);
+        Button mListeButton = findViewById(R.id.main_button_saliste);
 
         SessionManagement sessionManagement = new SessionManagement(MainActivity.this);
         int UserId = sessionManagement.getSession();
         System.out.println("User ID : "+UserId);
 
         //Changer de page avec le boutton pour aller au formulaire de connection
-        mConnectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDeconnectionPage();
-            }
-        });
-        mScanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openScannerPage();
-            }
-        });
-        mListeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openListePage();
-            }
-        });
+        mConnectionButton.setOnClickListener(view -> openDeconnectionPage());
+        mScanButton.setOnClickListener(view -> openScannerPage());
+        mListeButton.setOnClickListener(view -> openListePage());
     }
 
     public void openDeconnectionPage() {

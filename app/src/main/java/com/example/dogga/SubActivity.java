@@ -1,16 +1,12 @@
-package com.example.mangaliste;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static java.util.Objects.requireNonNull;
+package com.example.dogga;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,15 +18,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SubActivity extends AppCompatActivity {
-
-    private Button connect;
     private EditText mdp;
     private EditText pseudo;
-    private TextView error;
-
-    public static final String URL = "jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso";
-    public static final String User = "xencev_root";
-    public static final String MDP = "Tallys2001";
 
     public static final String SHARED_PREFS = "shared_prefs";
     SharedPreferences sharedpreferences;
@@ -45,25 +34,17 @@ public class SubActivity extends AppCompatActivity {
         pseudo = (EditText) findViewById(R.id.pseudo);
         mdp = (EditText) findViewById(R.id.mdp);
 
-        connect = (Button) findViewById(R.id.connect);
+        Button connect = (Button) findViewById(R.id.connect);
 
-        error = (TextView) findViewById(R.id.error);
+        TextView error = (TextView) findViewById(R.id.error);
 
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         pseudoStock = sharedpreferences.getString(Pseudo_KEY, null);
 
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                connection();
-            }
-        });
+        connect.setOnClickListener(view -> connection());
 
-        if (Build.VERSION.SDK_INT > 9)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
     }
 
@@ -93,7 +74,6 @@ public class SubActivity extends AppCompatActivity {
 
     public void login(int ID, String Name, User user) {
 
-
         SessionManagement sessionManagement = new SessionManagement(SubActivity.this);
         sessionManagement.saveSession(user);
 
@@ -104,6 +84,7 @@ public class SubActivity extends AppCompatActivity {
         NextActivity();
     }
 
+    @SuppressLint("SetTextI18n")
     private void connection() {
         System.out.println("connection début");
 
@@ -115,16 +96,16 @@ public class SubActivity extends AppCompatActivity {
 
             String SQLuser = "SELECT username FROM utilisateur WHERE username = '"+pseudo.getText().toString()+"'";
 
-            java.sql.Connection connuser = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001");
+            java.sql.Connection connuser = DriverManager.getConnection(ReadConfig.url_bdd, ReadConfig.username_bdd, ReadConfig.mdp_bdd);
             Statement st = connuser.createStatement();
             ResultSet rsuser = st.executeQuery(SQLuser);
             System.out.println(SQLuser);
 
 
             //Si l'utilisateur existe déjà en base :
-            if (rsuser.next() != false) {
+            if (rsuser.next()) {
                 //Erreur
-                ((TextView) findViewById(R.id.error)).setText("Le compte exise déjà.");
+                ((TextView) findViewById(R.id.error)).setText("Un utilisateur possède déjà ce pseudo.");
             } else {
                 String SQLB = "INSERT INTO `utilisateur`(`username`, `mdp`) VALUES ('"+pseudo.getText().toString()+"','"+mdp.getText().toString()+"')";
                 System.out.println(SQLB);
@@ -154,8 +135,7 @@ public class SubActivity extends AppCompatActivity {
             Class.forName("com.mysql.jdbc.Driver");
 
             //getConnection bug
-            //java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net:3306/xencev_site-perso"+"user=xencev_root&password=Tallys2001");
-            try (java.sql.Connection conn = DriverManager.getConnection("jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso", "xencev_root", "Tallys2001"))
+            try (java.sql.Connection conn = DriverManager.getConnection(ReadConfig.url_bdd, ReadConfig.username_bdd, ReadConfig.mdp_bdd))
             {
                 System.out.println("connectionSQL_BDD 1");
                 Statement st = conn.createStatement();

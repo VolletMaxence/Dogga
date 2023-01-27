@@ -1,25 +1,31 @@
-package com.example.mangaliste;
-
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+package com.example.dogga;
 
 import android.net.Uri;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.Buffer;
+import java.util.Properties;
 
 public class NetworkUtilis {
     private static final String LOG_TAG = NetworkUtilis.class.getSimpleName();
-    private static final String BOOK_BASE_URL = "https://api.upcitemdb.com/prod/trial/lookup?";
-    private static final String QUERY_PARAM = "upc";
+    private static final String BOOK_BASE_URL = "https://www.googleapis.com/books/v1/";
+    private static final String KEY_BASE_URL = "&key=";
+
+    //! A Changer pour mettre dans un dossier de configuration sécuriser !
+
+    private static final String QUERY_PARAM = "volumes?q=isbn:";
     private static final String MAX_RESULT = "maxResults";
     private static final String PRINT_TYPE = "printType";
+
+    public NetworkUtilis() {
+    }
 
     static String getBookInfo(String queryString) {
         HttpURLConnection urlConnection = null;
@@ -30,8 +36,7 @@ public class NetworkUtilis {
 
             Uri builtUri = Uri.parse(BOOK_BASE_URL).buildUpon()
                     .appendQueryParameter(QUERY_PARAM, queryString)
-                    //.appendQueryParameter(MAX_RESULT, "10")
-                    //.appendQueryParameter(PRINT_TYPE, "books")
+                    .appendQueryParameter(KEY_BASE_URL, ReadConfig.api_key)
                     .build();
 
             System.out.println("XYZA : "+ builtUri);
@@ -44,7 +49,7 @@ public class NetworkUtilis {
 
             //Lecture de la réponse :
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             if(inputStream == null)
             {
                 return null;
@@ -53,7 +58,7 @@ public class NetworkUtilis {
             String line;
             while ((line = reader.readLine()) != null)
             {
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
             if (buffer.length() == 0)
             {
@@ -80,8 +85,8 @@ public class NetworkUtilis {
                 }
             }
             Log.d(LOG_TAG, BookJSONString);
-            return BookJSONString;
         }
+        return BookJSONString;
     }
 
 

@@ -1,10 +1,10 @@
-package com.example.mangaliste;
+package com.example.dogga;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static java.util.Objects.requireNonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -23,15 +23,8 @@ import java.sql.Statement;
 
 public class Connection extends AppCompatActivity {
 
-    private Button connect;
-    private Button mSubButton;
     private EditText mdp;
     private EditText pseudo;
-    private TextView error;
-
-    public static final String URL = "jdbc:mysql://mysql-xencev.alwaysdata.net/xencev_site-perso";
-    public static final String User = "xencev_root";
-    public static final String MDP = "Tallys2001";
 
     public static final String SHARED_PREFS = "shared_prefs";
     SharedPreferences sharedpreferences;
@@ -46,33 +39,20 @@ public class Connection extends AppCompatActivity {
         pseudo = (EditText) findViewById(R.id.pseudo);
         mdp = (EditText) findViewById(R.id.mdp);
 
-        connect = (Button) findViewById(R.id.connect);
-        mSubButton = (Button) findViewById(R.id.Sub);
+        Button connect = (Button) findViewById(R.id.connect);
+        Button mSubButton = (Button) findViewById(R.id.Sub);
 
-        error = (TextView) findViewById(R.id.error);
+        TextView error = (TextView) findViewById(R.id.error);
 
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         pseudoStock = sharedpreferences.getString(Pseudo_KEY, null);
 
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                connection();
-            }
-        });
+        connect.setOnClickListener(view -> connection());
 
-        mSubButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openSubPage();
-            }
-        });
+        mSubButton.setOnClickListener(view -> openSubPage());
 
-        if (Build.VERSION.SDK_INT > 9)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
     }
 
@@ -120,6 +100,7 @@ public class Connection extends AppCompatActivity {
         NextActivity();
     }
 
+    @SuppressLint("SetTextI18n")
     private void connection() {
         System.out.println("connection début");
 
